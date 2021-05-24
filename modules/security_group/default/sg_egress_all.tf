@@ -1,5 +1,5 @@
 module "sg_egress" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=tags/v3.2.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=tags/v4.0.0"
 
   name        = "sg_egress"
   description = "egress all security group"

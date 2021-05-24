@@ -1,5 +1,5 @@
 module "sg_ssh_22" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git//modules/ssh?ref=tags/v3.2.0"
+  source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git//modules/ssh?ref=tags/v4.0.0"
 
   name        = "sg_ssh_22"
   description = "Security group for ssh with ports 22 open"
