@@ -5,14 +5,20 @@ variable "aws_region" {
 
 variable "aws_profile" {
   type    = string
-  default = ""
+  default = "aaiken"
 }
 
 
 ### Input ###
+
+variable "tf2MC" {
+  type  = string
+  description = "tf2? (default mc) y / N"
+}
+
 variable "serverType" {
   type        = string
-  description = "paper or forge --- N / y"
+  description = "Forge? (default paper) --- N / y"
 }
 
 
@@ -38,7 +44,7 @@ variable "vpc_public_subnet" {
 }
 
 
-### EC2 OpenVPN-as ###
+### EC2 server ###
 variable "vpn_ami" {
 	type    = string
 	default = "ami-03d315ad33b9d49c4"
