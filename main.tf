@@ -68,38 +68,38 @@ module "game_server_ec2" {
 }
 
 locals {
-  tf2_server_data = <<-EOF
-#!/bin/bash
-mkdir /hlserver
-chmod 775 /hlserver
-chown ubuntu /hlserver
-cd /hlserver
-dpkg --add-architecture i386
-apt-get update
-apt-get install lib32z1 libncurses5:i386 libbz2-1.0:i386 lib32gcc-s1 lib32stdc++6 libtinfo5:i386 libcurl3-gnutls:i386 -y
-apt install libsdl2-2.0-0:i386 -y
-wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-tar zxf steamcmd_linux.tar.gz
-echo "login anonymous
-force_install_dir /hlserver/tf2
-app_update 232250
-quit" > tf2_ds.txt
-echo "./steamcmd.sh +runscript tf2_ds.txt" > update.sh
-chmod +x steamcmd.sh
-chmod +x update.sh
-chown ubuntu *
-sudo sh /hlserver/update.sh
-echo "/hlserver/tf2/srcds_run -console -game tf -timeout 0 -autoupdate -steam_dir /hlserver -steamcmd_script /hlserver/tf2_ds.txt +maxplayers 24 +map ctf_2fort +sv_pure 0" > tf.sh
-chown ubuntu /hlserver/tf.sh
-chmod +x tf.sh
-echo """${file("configs/tf2/server.cfg")}""" > /hlserver/tf2/tf/cfg/server.cfg
-cd /hlserver/tf2/tf
-wget https://mms.alliedmods.net/mmsdrop/1.11/mmsource-1.11.0-git1144-linux.tar.gz
-tar zxf mmsource-1.11.0-git1144-linux.tar.gz
-wget https://sm.alliedmods.net/smdrop/1.10/sourcemod-1.10.0-git6502-linux.tar.gz
-tar zxf sourcemod-1.10.0-git6502-linux.tar.gz
-echo '"STEAM_0:1:201138974"        "99:z"' >> /hlserver/tf2/tf/addons/sourcemod/configs/admins_simple.ini
-sudo -u ubuntu bash /hlserver/tf.sh
+ 	tf2_server_data = <<-EOF
+	#!/bin/bash
+	mkdir /hlserver
+	chmod 775 /hlserver
+	chown ubuntu /hlserver
+	cd /hlserver
+	dpkg --add-architecture i386
+	apt-get update
+	apt-get install lib32z1 libncurses5:i386 libbz2-1.0:i386 lib32gcc-s1 lib32stdc++6 libtinfo5:i386 libcurl3-gnutls:i386 -y
+	apt install libsdl2-2.0-0:i386 -y
+	wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+	tar zxf steamcmd_linux.tar.gz
+	echo "login anonymous
+	force_install_dir /hlserver/tf2
+	app_update 232250
+	quit" > tf2_ds.txt
+	echo "./steamcmd.sh +runscript tf2_ds.txt" > update.sh
+	chmod +x steamcmd.sh
+	chmod +x update.sh
+	chown ubuntu *
+	sudo sh /hlserver/update.sh
+	echo "/hlserver/tf2/srcds_run -console -game tf -timeout 0 -autoupdate -steam_dir /hlserver -steamcmd_script /hlserver/tf2_ds.txt +maxplayers 24 +map ctf_2fort +sv_pure 0" > tf.sh
+	chown ubuntu /hlserver/tf.sh
+	chmod +x tf.sh
+	echo """${file("configs/tf2/server.cfg")}""" > /hlserver/tf2/tf/cfg/server.cfg
+	cd /hlserver/tf2/tf
+	wget https://mms.alliedmods.net/mmsdrop/1.11/mmsource-1.11.0-git1144-linux.tar.gz
+	tar zxf mmsource-1.11.0-git1144-linux.tar.gz
+	wget https://sm.alliedmods.net/smdrop/1.10/sourcemod-1.10.0-git6502-linux.tar.gz
+	tar zxf sourcemod-1.10.0-git6502-linux.tar.gz
+	echo '"STEAM_0:1:201138974"        "99:z"' >> /hlserver/tf2/tf/addons/sourcemod/configs/admins_simple.ini
+	sudo -u ubuntu bash /hlserver/tf.sh
   EOF
   paper_user_data = <<-EOF
     #! /bin/bash
@@ -107,7 +107,7 @@ sudo -u ubuntu bash /hlserver/tf.sh
     wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
     echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb $(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
     apt-get update
-    apt-get install adoptopenjdk-11-hotspot -y
+    apt-get install adoptopenjdk-16-hotspot -y
     apt-get install jq -y
     fallocate -l 1G /swapfile
     chmod 600 /swapfile
@@ -116,10 +116,10 @@ sudo -u ubuntu bash /hlserver/tf.sh
     echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
     mkdir /paper
     cd /paper
-    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.16.5" -H  "accept: application/json" | jq '.builds[-1]')
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/$${LATEST_BUILD}/downloads/paper-1.16.5-$${LATEST_BUILD}.jar" -H  "accept: application/java-archive" -JO
-    curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.16.5" -H  "accept: application/json"
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.16.5/builds/[BUILD_ID]/downloads/paper-1.16.5-[BUILD_ID].jar" -H  "accept: application/java-archive" -JO
+    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.17" -H  "accept: application/json" | jq '.builds[-1]')
+    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.17/builds/$${LATEST_BUILD}/downloads/paper-1.17-$${LATEST_BUILD}.jar" -H  "accept: application/java-archive" -JO
+    curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.17" -H  "accept: application/json"
+    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.17/builds/[BUILD_ID]/downloads/paper-1.17-[BUILD_ID].jar" -H  "accept: application/java-archive" -JO
     java -Xms4G -Xmx4G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui
     echo "eula=true" > eula.txt
     echo "java -Xms4G -Xmx4G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui" > start.sh
