@@ -37,12 +37,6 @@ variable "key_name" {
   default     = ""
 }
 
-variable "private_ip" {
-  type        = string
-  description = "Private ip address of ec2 instance"
-  default     = ""
-}
-
 variable "user_data" {
   type        = string
   description = "User data to pass into instance"
