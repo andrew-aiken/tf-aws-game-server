@@ -52,7 +52,7 @@ variable "vpn_ami" {
 
 variable "vps_size" {
 	type    = string
-	default = "t2.large"
+	default = "t3.xlarge"
 }
 
 variable "ec2_ssh_key" {
