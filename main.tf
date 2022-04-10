@@ -99,10 +99,10 @@ locals {
     echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
     mkdir /paper
     cd /paper
-    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18" -H  "accept: application/json" | jq '.builds[-1]')
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18/builds/$${LATEST_BUILD}/downloads/paper-1.18-$${LATEST_BUILD}.jar" -H "accept: application/java-archive" -JO
-    curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18" -H "accept: application/json"
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18/builds/[BUILD_ID]/downloads/paper-1.18-[BUILD_ID].jar" -H "accept: application/java-archive" -JO
+    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2" -H  "accept: application/json" | jq '.builds[-1]')
+    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2/builds/$${LATEST_BUILD}/downloads/paper-1.18.2-$${LATEST_BUILD}.jar" -H "accept: application/java-archive" -JO
+    curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2" -H "accept: application/json"
+    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2/builds/[BUILD_ID]/downloads/paper-1.18.2-[BUILD_ID].jar" -H "accept: application/java-archive" -JO
     java -Xms6G -Xmx6G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui
     echo "eula=true" > eula.txt
     echo "java -Xms6G -Xmx6G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui" > start.sh
@@ -112,9 +112,9 @@ locals {
           "uuid": "8fe5fa2d-100c-4332-891f-97520ea37888",
           "name": "i8MadChicken",
           "level": 4,
-          "bypassesPlayerLimit": true
+          "bypassesPlayerLimit": false
         }
-      ] "> /paper/ops.jsons
+      ] "> /paper/ops.json
     ./start.sh
   EOF
   forge_user_data = <<-EOF
