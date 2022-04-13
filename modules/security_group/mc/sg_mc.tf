@@ -1,5 +1,7 @@
 module "sg_mc" {
-  source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=tags/v4.0.0"
+  //source = "git::https://github.com/terraform-aws-modules/terraform-aws-security-group.git?ref=tags/v4.0.0"
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "4.9.0"
 
   name        = "sg_mc"
   description = "MC security group"

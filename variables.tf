@@ -47,16 +47,16 @@ variable "vpc_public_subnet" {
 ### EC2 server ###
 variable "vpn_ami" {
 	type    = string
-	default = "ami-03d315ad33b9d49c4"
+	default = "ami-04505e74c0741db8d"
 }
 
-variable "vpn_size" {
+variable "vps_size" {
 	type    = string
-	default = "t2.large"
+	default = "t3.xlarge"
 }
 
 variable "ec2_ssh_key" {
 	type        = string
-	default     = "ec2_ssh_key"
+	default     = "game_server_key"
 	description = "SSH key name stored in ec2 keypairs"
 }
