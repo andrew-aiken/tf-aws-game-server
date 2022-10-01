@@ -27,13 +27,13 @@ module "game_server_ec2" {
   source             = "./modules/ec2"
   instance_count     = "1"
   name               = var.tf2MC == "y" ? "TF2_Server" : (var.serverType == "y" ? "Force_MC_Server" : "Paper_MC_Server")
-  ami                = var.vpn_ami
+  ami                = var.ami
   security_group_ids = var.tf2MC == "y" ? [module.sg_default.sg_ssh_22_id,module.sg_tf2.sg_tf2_id] : [module.sg_default.sg_ssh_22_id,module.sg_mc.sg_mc_id]
   subnet_id          = module.vpc.public_subnets[0]
   ec2_size           = var.vps_size
   key_name           = var.ec2_ssh_key
   root_block_size    = 30
-  user_data          = var.tf2MC == "y" ? local.tf2_server_data : (var.serverType == "y" ? local.forge_user_data : local.paper_user_data)
+  # user_data          = var.tf2MC == "y" ? local.tf2_server_data : (var.serverType == "y" ? local.forge_user_data : local.paper_user_data)
 }
 
 locals {
@@ -86,12 +86,7 @@ locals {
   EOF
   paper_user_data = <<-EOF
     #! /bin/bash
-    apt-get install -y wget apt-transport-https gnupg
-    wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add -
-    echo "deb https://adoptopenjdk.jfrog.io/adoptopenjdk/deb $(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2) main" | tee /etc/apt/sources.list.d/adoptopenjdk.list
-    apt-get update
-    apt-get install openjdk-17-jre-headless -y
-    apt-get install jq -y
+    apt-get install -y wget apt-transport-https gnupg openjdk-17-jre-headless jq
     fallocate -l 1G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
@@ -99,10 +94,8 @@ locals {
     echo "/swapfile   none    swap    sw    0   0" >> /etc/fstab
     mkdir /paper
     cd /paper
-    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2" -H  "accept: application/json" | jq '.builds[-1]')
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2/builds/$${LATEST_BUILD}/downloads/paper-1.18.2-$${LATEST_BUILD}.jar" -H "accept: application/java-archive" -JO
-    curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2" -H "accept: application/json"
-    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.18.2/builds/[BUILD_ID]/downloads/paper-1.18.2-[BUILD_ID].jar" -H "accept: application/java-archive" -JO
+    LATEST_BUILD=$(curl -X GET "https://papermc.io/api/v2/projects/paper/versions/1.19.2" -H  "accept: application/json" | jq '.builds[-1]')
+    curl -o paperclip.jar -X GET "https://papermc.io/api/v2/projects/paper/versions/1.19.2/builds/$${LATEST_BUILD}/downloads/paper-1.19.2-$${LATEST_BUILD}.jar" -H "accept: application/java-archive" -JO
     java -Xms14G -Xmx14G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui
     echo "eula=true" > eula.txt
     echo "java -Xms14G -Xmx14G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true -jar paperclip.jar nogui" > start.sh
