@@ -45,9 +45,9 @@ variable "vpc_public_subnet" {
 
 
 ### EC2 server ###
-variable "vpn_ami" {
+variable "ami" {
 	type    = string
-	default = "ami-04505e74c0741db8d"
+	default = "ami-08c40ec9ead489470"
 }
 
 variable "vps_size" {
