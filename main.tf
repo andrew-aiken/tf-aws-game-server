@@ -33,7 +33,7 @@ module "game_server_ec2" {
   ec2_size           = var.vps_size
   key_name           = var.ec2_ssh_key
   root_block_size    = 30
-  # user_data          = var.tf2MC == "y" ? local.tf2_server_data : (var.serverType == "y" ? local.forge_user_data : local.paper_user_data)
+  user_data          = var.tf2MC == "y" ? local.tf2_server_data : (var.serverType == "y" ? local.forge_user_data : local.paper_user_data)
 }
 
 locals {
@@ -86,7 +86,8 @@ locals {
   EOF
   paper_user_data = <<-EOF
     #! /bin/bash
-    apt-get install -y wget apt-transport-https gnupg openjdk-17-jre-headless jq
+    apt update
+    apt install -y wget apt-transport-https gnupg openjdk-17-jre-headless jq
     fallocate -l 1G /swapfile
     chmod 600 /swapfile
     mkswap /swapfile
